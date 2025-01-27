@@ -24,6 +24,7 @@ const Home: React.FC = () => {
   // Validación del token y redirección
   if (!token) {
     window.location.reload(); // Redirige y recarga la página
+    navigate("/")
     return null;
   }
 
