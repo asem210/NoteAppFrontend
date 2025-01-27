@@ -53,8 +53,9 @@ const Home: React.FC = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate("/");
+    navigate("/"); 
   };
+  
 
   const handleDelete = (id: number) => {
     setNoteToDelete(id);
