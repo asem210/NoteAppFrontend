@@ -3,12 +3,9 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import Login from './pages/login'; // Tu componente Login
 import { authService } from './services/auth';
 import Home from './pages/Home';
-import { useNavigate } from 'react-router-dom';
 
 const App: React.FC = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();  // Añadido el hook useNavigate
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false); // Inicializar como null para esperar la validación
 
   // Verificar token al inicio
   const checkAuthentication = async () => {
@@ -16,26 +13,18 @@ const App: React.FC = () => {
 
     if (token) {
       const result = await authService.validateToken(token); // Verificar si el token es válido
-      if (result) {
-        setIsAuthenticated(true); // Si el token es válido, el usuario está autenticado
-      } else {
-        setIsAuthenticated(false); // Si el token es inválido, redirigir al login
-        localStorage.removeItem('token'); // Limpiar el token
-        navigate("/");  // Redirigir al login si el token es inválido
-      }
+      setIsAuthenticated(result); // Actualizar el estado de autenticación según el resultado
     } else {
-      setIsAuthenticated(false); // Si no hay token, redirigir al login
-      navigate("/");  // Redirigir al login si no hay token
+      setIsAuthenticated(false); // Si no hay token, no está autenticado
     }
-    setLoading(false); // Después de verificar, dejamos de cargar
   };
 
   useEffect(() => {
-    checkAuthentication();
+    checkAuthentication(); // Realizar la comprobación al iniciar
   }, []);
 
-  if (loading) {
-    return <div>Loading...</div>; // Puedes mostrar un cargador mientras se verifica el token
+  if (isAuthenticated === null) {
+    return null; // Puedes retornar null o algo que indique que se está realizando la validación
   }
 
   return (
@@ -43,7 +32,7 @@ const App: React.FC = () => {
       <Routes>
         {/* Ruta de login */}
         <Route path="/" element={isAuthenticated ? <Navigate to="/home" /> : <Login setAuth={setIsAuthenticated} />} />
-        
+
         {/* Ruta protegida */}
         <Route path="/home" element={isAuthenticated ? <Home /> : <Navigate to="/" />} />
 
@@ -52,4 +41,5 @@ const App: React.FC = () => {
     </Router>
   );
 };
-export default App
+
+export default App;
