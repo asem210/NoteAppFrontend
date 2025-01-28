@@ -3,7 +3,6 @@ import { notesService } from "../services/notes";
 import { Note } from "../entities/notes";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/header";
-import ActionBar from "../components/actionbar";
 import Categories from "../components/categories";
 import NoteCard from "../components/notecard";
 import DeleteModal from "../components/deletemodal";
@@ -53,9 +52,8 @@ const Home: React.FC = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate("/"); 
+    navigate("/");
   };
-  
 
   const handleDelete = (id: number) => {
     setNoteToDelete(id);
@@ -149,7 +147,6 @@ const Home: React.FC = () => {
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Header onLogout={handleLogout} />
       <main className="flex-1 p-6">
-        <ActionBar />
         
         {/* Formulario de creación de nota */}
         <div className="mb-8">
